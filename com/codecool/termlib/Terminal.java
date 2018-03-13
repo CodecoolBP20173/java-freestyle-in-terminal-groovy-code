@@ -89,46 +89,5 @@ public class Terminal {
     // these two functions from: https://stackoverflow.com/questions/1410741/want-to-invoke-a-linux-shell-command-from-java
     private void command(String commandString) {
         System.out.print(CONTROL_CODE + commandString);
-        // ArrayList<String> output = getCommandString(commandString, ".");
-        // if (null == output)
-        //     System.out.println("\n\n\t\tCOMMAND FAILED: " + commandString);
-        // else
-        //     for (String line : output)
-        //         System.out.println(line);
-    }
-
-    private void command2(final String cmdline){
-
-    }
-
-    //cmdline: command to run, directory: where to run it
-    private static ArrayList<String> getCommandString(final String cmdline, final String directory) {
-        try {
-            Process process = 
-                new ProcessBuilder(new String[] {"xterm", "-e", cmdline})
-                    .redirectErrorStream(true)
-                    .directory(new File(directory))
-                    .start();
-
-            ArrayList<String> output = new ArrayList<String>();
-            BufferedReader br = new BufferedReader(
-                new InputStreamReader(process.getInputStream()));
-            String line = null;
-            while ( (line = br.readLine()) != null )
-                output.add(line);
-
-            //There should really be a timeout here.
-            if (0 != process.waitFor())
-                return null;
-
-            return output;
-
-        } catch (Exception e) {
-            //Warning: doing this is no good in high quality applications.
-            //Instead, present appropriate error messages to the user.
-            //But it's perfectly fine for prototyping.
-
-            return null;
-        }
     }
 }
