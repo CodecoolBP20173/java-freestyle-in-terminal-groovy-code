@@ -14,44 +14,46 @@ public class Terminal {
 
     public void resetStyle() {
         //<ESC>[{attr1};...;{attrn}m
-        command(CONTROL_CODE + '[' + 0 + STYLE);
+        command(0 + STYLE);
     }
 
     public void clearScreen() {
-        command(CONTROL_CODE + CLEAR);
+        command(CLEAR);
     }
 
     public void moveTo(Integer x, Integer y) {
-        command(CONTROL_CODE + '[' + String.valueof(x) + ';' + String.valueOf(y) + MOVE);
+        command(String.valueOf(x) + ';' + String.valueOf(y) + MOVE);
     }
 
     public void setColor(Color color) {
         String code = getFGColorCode(color);
-        command(CONTROL_CODE + '[' + code + STYLE);
+        command(code + STYLE);
     }
 
     public void setBgColor(Color color) {
         String code = getBGColorCode(color);
-        command(CONTROL_CODE + '[' + code + STYLE);
+        command(code + STYLE);
     }
 
     public void setUnderline() {
-        command(CONTROL_CODE + '[' + '4' + STYLE);
+        command('4' + STYLE);
     }
 
     public void moveCursor(Direction direction, Integer amount) {
-        command(CONTROL_CODE + '[' + String.valueOf(amount) + getDirectionCode(direction));
+        command(Integer.toString(amount) + getDirectionCode(direction));
     }
 
     public void setChar(char c) {
-        command(String.valueof(c));
+        System.out.print(String.valueOf(c));
+        moveCursor(Direction.BACKWARD, 1);
     }
 
     private String getDirectionCode(Direction dir){
-        if (dir == UP) return 'A';
-        if (dir == DOWN) return 'B';
-        if (dir == FORWARD) return 'C';
-        if (dir == BACKWARD) return 'D'; 
+        if (dir == Direction.UP) return "A";
+        if (dir == Direction.DOWN) return "B";
+        if (dir == Direction.FORWARD) return "C";
+        if (dir == Direction.BACKWARD) return "D";
+        return "";
     }
 
     private String getBGColorCode(Color color){
@@ -86,19 +88,24 @@ public class Terminal {
 
     // these two functions from: https://stackoverflow.com/questions/1410741/want-to-invoke-a-linux-shell-command-from-java
     private void command(String commandString) {
-        ArrayList<String> output = getCommandString(commandString, ".");
-        if (null == output)
-            System.out.println("\n\n\t\tCOMMAND FAILED: " + commandString);
-        else
-            for (String line : output)
-                System.out.println(line);
+        System.out.print(CONTROL_CODE + commandString);
+        // ArrayList<String> output = getCommandString(commandString, ".");
+        // if (null == output)
+        //     System.out.println("\n\n\t\tCOMMAND FAILED: " + commandString);
+        // else
+        //     for (String line : output)
+        //         System.out.println(line);
+    }
+
+    private void command2(final String cmdline){
+
     }
 
     //cmdline: command to run, directory: where to run it
     private static ArrayList<String> getCommandString(final String cmdline, final String directory) {
         try {
             Process process = 
-                new ProcessBuilder(new String[] {"bash", "-c", cmdline})
+                new ProcessBuilder(new String[] {"xterm", "-e", cmdline})
                     .redirectErrorStream(true)
                     .directory(new File(directory))
                     .start();
