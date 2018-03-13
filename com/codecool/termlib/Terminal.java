@@ -14,7 +14,7 @@ public class Terminal {
 
     public void resetStyle() {
         //<ESC>[{attr1};...;{attrn}m
-        command(0 + STYLE);
+        command('0' + STYLE);
     }
 
     public void clearScreen() {
@@ -86,7 +86,6 @@ public class Terminal {
         return code;
     }
 
-    // these two functions from: https://stackoverflow.com/questions/1410741/want-to-invoke-a-linux-shell-command-from-java
     private void command(String commandString) {
         System.out.print(CONTROL_CODE + commandString);
     }
