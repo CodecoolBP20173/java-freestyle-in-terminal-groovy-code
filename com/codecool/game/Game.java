@@ -6,10 +6,12 @@ import com.codecool.termlib.Direction;
 import com.codecool.termlib.Terminal;
 
 public class Game {
-    char[][] grid = new char[24][80];
+    static char[][] grid = new char[24][80];
+    static char car = 'X';
     public static void main(String[] args) {
         Terminal t = new Terminal();
-        t.moveTo(80, 24);
+        t.moveTo(79, 23);
+        updateGrid(23, 79, car);
         while (true) {
             Character d = tryToRead();
             if (d == null)
@@ -17,12 +19,12 @@ public class Game {
             if (d == 'd') {
                 t.setChar(' ');
                 t.moveCursor(Direction.FORWARD, 1);
-                t.setChar('X');
+                t.setChar(car);
             }
             if (d == 'a') {
                 t.setChar(' ');
                 t.moveCursor(Direction.BACKWARD, 1);
-                t.setChar('X');
+                t.setChar(car);
             }
             if (d == 'p') {
                 System.exit(0);
@@ -30,8 +32,8 @@ public class Game {
         }
     }
 
-    public void updateGrid(int x, int y, char c) {
-        grid[5][20] = 'x';
+    public static void updateGrid(int y, int x, char ch) {
+        grid[y][x] = ch;
     }
 
 
