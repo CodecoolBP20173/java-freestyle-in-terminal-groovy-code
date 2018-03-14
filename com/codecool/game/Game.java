@@ -4,10 +4,12 @@ import com.codecool.termlib.Direction;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import javax.lang.model.util.ElementFilter;
 import java.lang.Thread;
-
 
 import java.io.*;
 import com.codecool.termlib.Color;
@@ -20,6 +22,9 @@ public class Game {
     static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static char car = 'X';
+    Character[] obstacleSet = {'O', 'G', 'V', 'M'};
+    List<Character> obstacles = Arrays.asList(obstacleSet);
+    Character randomObstacles = obstacles.get(new Random().nextInt(obstacles.size()));
 
     public static class Car{
         static int row = 23;
@@ -51,7 +56,7 @@ public class Game {
             drawRoad(b);
             b = !b;
             drawGrid();
-            Thread.sleep(200);
+            Thread.sleep(120);
         }
     }
 
