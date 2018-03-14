@@ -99,8 +99,8 @@ public class Game {
         }
     }
 
-    public static void gridMoving(){
-
+    public static void blockElements(){
+        
     }
 }
 
