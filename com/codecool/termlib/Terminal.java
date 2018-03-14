@@ -45,7 +45,6 @@ public class Terminal {
 
     public void setChar(char c) {
         System.out.print(String.valueOf(c));
-        moveCursor(Direction.BACKWARD, 1);
     }
 
     private String getDirectionCode(Direction dir){
