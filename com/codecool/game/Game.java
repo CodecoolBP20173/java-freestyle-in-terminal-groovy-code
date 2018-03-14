@@ -11,13 +11,14 @@ import java.lang.Thread;
 
 import java.io.*;
 import com.codecool.termlib.Color;
+import com.codecool.termlib.Direction;
 import com.codecool.termlib.Terminal;
 
 public class Game {
+    static char[][] grid = new char[24][80];
     public static void main(String[] args) throws InterruptedException {
         Terminal t = new Terminal();
         boolean b = false;
-
         while (true) {
             grid(b);
             b = !b;
@@ -28,7 +29,13 @@ public class Game {
             if (d == null)
                 continue;
             if (d == 'd') {
-                t.moveTo(30,30);
+                t.setChar(' ');
+                t.moveCursor(Direction.FORWARD, 1);
+                t.setChar('X');
+            }
+            if (d == 'a') {
+                t.setChar(' ');
+                t.moveCursor(Direction.BACKWARD, 1);
                 t.setChar('X');
             }
             if (d == 'p') {
@@ -37,6 +44,11 @@ public class Game {
             
         }
     }
+
+    public void updateGrid(int x, int y, char c) {
+        grid[5][20] = 'x';
+    }
+
 
     private static Character tryToRead() {
         try {
