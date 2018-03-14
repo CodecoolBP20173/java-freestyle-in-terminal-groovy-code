@@ -16,9 +16,14 @@ import com.codecool.termlib.Terminal;
 
 public class Game {
     static char[][] grid = new char[24][80];
+    static Terminal t = new Terminal();
+    static char car = 'X';
+
+
     public static void main(String[] args) throws InterruptedException {
-        Terminal t = new Terminal();
         boolean b = false;
+        t.moveTo(79, 23);
+        updateGrid(23, 79, car);
         while (true) {
             grid(b);
             b = !b;
@@ -31,12 +36,12 @@ public class Game {
             if (d == 'd') {
                 t.setChar(' ');
                 t.moveCursor(Direction.FORWARD, 1);
-                t.setChar('X');
+                t.setChar(car);
             }
             if (d == 'a') {
                 t.setChar(' ');
                 t.moveCursor(Direction.BACKWARD, 1);
-                t.setChar('X');
+                t.setChar(car);
             }
             if (d == 'p') {
                 System.exit(0);
@@ -45,8 +50,8 @@ public class Game {
         }
     }
 
-    public void updateGrid(int x, int y, char c) {
-        grid[5][20] = 'x';
+    public static void updateGrid(int y, int x, char ch) {
+        grid[y][x] = ch;
     }
 
 
