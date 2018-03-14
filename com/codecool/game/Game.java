@@ -33,11 +33,13 @@ public class Game {
             Character input = tryToRead();
             if (input != null){
                 if (input == 'd') {
+                    checkImpact();
                     updateGrid(Car.row, Car.col, ' ');
                     Car.col++;
                     updateGrid(Car.row, Car.col, 'X');
                 }
                 if (input == 'a') {
+                    checkImpact();
                     updateGrid(Car.row, Car.col, ' ');
                     Car.col--;
                     updateGrid(Car.row, Car.col, 'X');
@@ -101,6 +103,21 @@ public class Game {
 
     public static void blockElements(){
         
+    }
+
+    public static void checkImpact() {
+        for (int i = 0; i < grid.length; i++) {
+            if (Car.col == 26) {
+                updateGrid(Car.row, Car.col, ' ');
+                Car.col++;
+                
+            }
+            if (Car.col == 54) {
+                updateGrid(Car.row, Car.col, ' ');
+                Car.col--;
+                
+            }
+        }
     }
 }
 
