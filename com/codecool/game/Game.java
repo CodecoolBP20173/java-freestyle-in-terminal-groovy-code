@@ -1,19 +1,29 @@
 package com.codecool.game;
 
+import com.codecool.termlib.Direction;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 import javax.lang.model.util.ElementFilter;
+import java.lang.Thread;
+
 
 import java.io.*;
 import com.codecool.termlib.Color;
 import com.codecool.termlib.Terminal;
 
 public class Game {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        Terminal t = new Terminal();
+        boolean b = false;
+
         while (true) {
-            Terminal t = new Terminal();
-            t.clearScreen();
+            grid(b);
+            b = !b;
+            Thread.sleep(500);
+            //System.out.print(b);
+            t.moveTo(0,0);
             Character d = tryToRead();
             if (d == null)
                 continue;
@@ -24,6 +34,7 @@ public class Game {
             if (d == 'p') {
                 System.exit(0);
             }
+            
         }
     }
 
@@ -37,5 +48,31 @@ public class Game {
         }
         return null;
     }
-
+    
+    public static void grid(boolean b){
+        Terminal t = new Terminal();
+        int toggle = b ? 1 : 0;
+        int [][] board= new int [24][80];
+        for(int i = 0;i<board.length;i++){
+            for (int j = 0;j<80;j++){
+                if (j==25 | j==55){
+                    if(i % 2 == toggle){
+                        System.out.print("/");
+                    }
+                    else{
+                        System.out.print('\\');
+                    }
+                    
+                }else{
+                    System.out.print(" ");
+                }
+            }
+            t.moveCursor(Direction.BACKWARD,80);
+            System.out.println();
+        }
+    }
+    public static void gridMoving(){
+        
+    }
 }
+
