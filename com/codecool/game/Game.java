@@ -21,14 +21,12 @@ public class Game {
     static Terminal t = new Terminal();
     static char car = 'X';
     static int[][] blocks=new int[50][2];
-    Character[] obstacleSet = {'O', 'G', 'V', 'M'};
-    List<Character> obstacles = Arrays.asList(obstacleSet);
-    Character randomObstacles = obstacles.get(new Random().nextInt(obstacles.size()));
+    
 
     public static class Car {
         static int row = 23;
         static int col = 45;
-        static int speed = 150;
+        static int speed = 140;
     }
 
     public static class Obstacle {
@@ -42,7 +40,6 @@ public class Game {
         updateGrid(Car.row, Car.col, car);
         updateGrid(Obstacle.row, Obstacle.col, Obstacle.symbol);
         while (true) {
-            moveObstacle();
             Character input = tryToRead();
             if (input != null) {
                 if (input == 'd') {
@@ -71,6 +68,7 @@ public class Game {
                     System.exit(0);
                 }
             }
+            moveObstacle();
             drawRoad(b);
             b = !b;
             drawGrid();
