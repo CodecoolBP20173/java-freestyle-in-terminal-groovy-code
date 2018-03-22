@@ -121,6 +121,7 @@ public class Game {
             updateGrid(Obstacle.row -1, Obstacle.col, ' ');
         }
         if (Obstacle.row == 23) {
+            checkImpact();
             updateGrid(Obstacle.row, Obstacle.col, ' ');
             Obstacle.row = 0;
             Random rnd = new Random();
@@ -159,6 +160,10 @@ public class Game {
                 updateGrid(Car.row, Car.col, ' ');
                 Car.col--;
 
+            }
+
+            if (Car.col == Obstacle.col && Car.row == Obstacle.row) {
+                System.exit(5);
             }
         }
     }
