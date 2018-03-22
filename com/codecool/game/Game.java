@@ -20,20 +20,29 @@ public class Game {
     static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static char car = 'X';
-    Character[] obstacleSet = { 'O', 'G', 'V', 'M' };
+    static int[][] blocks=new int[50][2];
+    Character[] obstacleSet = {'O', 'G', 'V', 'M'};
     List<Character> obstacles = Arrays.asList(obstacleSet);
     Character randomObstacles = obstacles.get(new Random().nextInt(obstacles.size()));
 
     public static class Car {
         static int row = 23;
         static int col = 45;
-        static int speed = 120;
+        static int speed = 150;
+    }
+
+    public static class Obstacle {
+        static int row = 0;
+        static int col = 45;
+        static char symbol = 'O';
     }
 
     public static void main(String[] args) throws InterruptedException {
         boolean b = false;
         updateGrid(Car.row, Car.col, car);
+        updateGrid(Obstacle.row, Obstacle.col, Obstacle.symbol);
         while (true) {
+            moveObstacle();
             Character input = tryToRead();
             if (input != null) {
                 if (input == 'd') {
@@ -96,13 +105,30 @@ public class Game {
                     }
 
                 } else {
-                    if (grid[i][j] != 'X') {
+                    if (grid[i][j] != 'X' && grid[i][j] != 'O') {
                         updateGrid(i, j, ' ');
                     }
                 }
             }
         }
     }
+
+    public static void moveObstacle(){
+        
+        if (Obstacle.row < 23) {
+            Obstacle.row++;
+            updateGrid(Obstacle.row , Obstacle.col, Obstacle.symbol);
+            updateGrid(Obstacle.row -1, Obstacle.col, ' ');
+        }
+        if (Obstacle.row == 23) {
+            updateGrid(Obstacle.row, Obstacle.col, ' ');
+            Obstacle.row = 0;
+            Random rnd = new Random();
+            int n = 25 + (int)(Math.random() * ((55-25)+1));
+            Obstacle.col = n;
+        }
+    } 
+
 
     public static void drawGrid() {
         t.moveTo(0, 0);
@@ -113,8 +139,13 @@ public class Game {
         }
     }
 
-    public static void blockElements() {
-
+    public static void blockElements(){
+        Random rand = new Random();
+        for (int i = 0; i<50; i++){
+            int n = 25 + (int)(Math.random() * ((55 - 25) + 1));
+            blocks[i][0]=15;
+            blocks[i][1]=n;
+        }
     }
 
     public static void checkImpact() {
