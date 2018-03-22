@@ -42,7 +42,11 @@ public class Game {
         updateGrid(Car.row, Car.col, car);
         updateGrid(Obstacle.row, Obstacle.col, Obstacle.symbol);
         while (true) {
+            if (Car.speed > 50) {
+                Car.speed--;
+            }
             moveObstacle();
+
             Character input = tryToRead();
             if (input != null) {
                 if (input == 'd') {
@@ -105,7 +109,7 @@ public class Game {
                     }
 
                 } else {
-                    if (grid[i][j] != 'X' && grid[i][j] != 'O') {
+                    if (grid[i][j] != 'X' && grid[i][j] != 'O' && grid[i][j] != 'T' && grid[i][j] != 'I' && grid[i][j] != 'M' && grid[i][j] != 'E' && grid[i][j] != ':' && grid[i][j] != ':' && grid[i][j] != '0') {
                         updateGrid(i, j, ' ');
                     }
                 }
@@ -140,6 +144,7 @@ public class Game {
         }
     }
 
+
     public static void blockElements(){
         Random rand = new Random();
         for (int i = 0; i<50; i++){
@@ -147,6 +152,17 @@ public class Game {
             blocks[i][0]=15;
             blocks[i][1]=n;
         }
+    }
+
+    public static void timer(){
+        int setTime=0;
+        char r = (char) setTime;
+        updateGrid(10,10,'T');
+        updateGrid(10,11,'I');
+        updateGrid(10,12,'M');
+        updateGrid(10,13,'E');
+        updateGrid(10,14,':');
+        updateGrid(10,15, r);
     }
 
     public static void checkImpact() {
