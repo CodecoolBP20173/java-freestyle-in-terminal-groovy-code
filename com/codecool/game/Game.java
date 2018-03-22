@@ -16,19 +16,18 @@ import com.codecool.termlib.Color;
 import com.codecool.termlib.Direction;
 import com.codecool.termlib.Terminal;
 
-
-
 public class Game {
     static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static char car = 'X';
-    Character[] obstacleSet = {'O', 'G', 'V', 'M'};
+    Character[] obstacleSet = { 'O', 'G', 'V', 'M' };
     List<Character> obstacles = Arrays.asList(obstacleSet);
     Character randomObstacles = obstacles.get(new Random().nextInt(obstacles.size()));
 
-    public static class Car{
+    public static class Car {
         static int row = 23;
         static int col = 45;
+        static int speed = 120;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -36,7 +35,7 @@ public class Game {
         updateGrid(Car.row, Car.col, car);
         while (true) {
             Character input = tryToRead();
-            if (input != null){
+            if (input != null) {
                 if (input == 'd') {
                     checkImpact();
                     updateGrid(Car.row, Car.col, ' ');
@@ -49,21 +48,30 @@ public class Game {
                     Car.col--;
                     updateGrid(Car.row, Car.col, 'X');
                 }
+                if (input == 'w') {
+                    if (Car.speed > 0) {
+                        Car.speed -= 20;
+                    }
+                }
+                if (input == 's') {
+                    if (Car.speed < 350) {
+                        Car.speed += 20;
+                    }
+                }
                 if (input == 'q') {
                     System.exit(0);
-                }  
+                }
             }
             drawRoad(b);
             b = !b;
             drawGrid();
-            Thread.sleep(120);
+            Thread.sleep(Car.speed);
         }
     }
 
     public static void updateGrid(int row, int col, char ch) {
         grid[row][col] = ch;
     }
-
 
     private static Character tryToRead() {
         try {
@@ -75,21 +83,20 @@ public class Game {
         }
         return null;
     }
-    
-    public static void drawRoad(boolean b){
+
+    public static void drawRoad(boolean b) {
         int toggle = b ? 1 : 0;
-        for(int i = 0;i < 24;i++){
-            for (int j = 0;j < 80;j++){
-                if (j==25 | j==55){
-                    if(i % 2 == toggle){
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 80; j++) {
+                if (j == 25 | j == 55) {
+                    if (i % 2 == toggle) {
                         updateGrid(i, j, '/');
-                    }
-                    else{
+                    } else {
                         updateGrid(i, j, '\\');
                     }
-                    
-                }else{
-                    if (grid[i][j] != 'X'){
+
+                } else {
+                    if (grid[i][j] != 'X') {
                         updateGrid(i, j, ' ');
                     }
                 }
@@ -97,17 +104,17 @@ public class Game {
         }
     }
 
-    public static void drawGrid(){
+    public static void drawGrid() {
         t.moveTo(0, 0);
-        for(int i = 0;i < 24;i++){
-            for (int j = 0;j < 80;j++){
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 80; j++) {
                 t.setChar(grid[i][j]);
             }
         }
     }
 
-    public static void blockElements(){
-        
+    public static void blockElements() {
+
     }
 
     public static void checkImpact() {
@@ -115,14 +122,13 @@ public class Game {
             if (Car.col == 26) {
                 updateGrid(Car.row, Car.col, ' ');
                 Car.col++;
-                
+
             }
             if (Car.col == 54) {
                 updateGrid(Car.row, Car.col, ' ');
                 Car.col--;
-                
+
             }
         }
     }
 }
-
