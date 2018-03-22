@@ -20,16 +20,19 @@ public class Game {
     static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static char car = 'X';
-
+    static short frame = 1;
+    
     public static class Car{
         static int row = 23;
         static int col = 45;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         boolean b = false;
+        
         updateGrid(Car.row, Car.col, car);
         while (true) {
+            if (frame == 2400) frame = 1;
             Character input = tryToRead();
             if (input != null){
                 if (input == 'd') {
@@ -46,10 +49,12 @@ public class Game {
                     System.exit(0);
                 }  
             }
-            drawRoad(b);
+            if (frame % 3 == 0) drawRoad();
             b = !b;
             drawGrid();
-            Thread.sleep(200);
+            Thread.sleep(10);
+            frame++;
+            //System.in.read();
         }
     }
 
@@ -69,23 +74,27 @@ public class Game {
         return null;
     }
     
-    public static void drawRoad(boolean b){
-        int toggle = b ? 1 : 0;
+    public static void drawRoad(){
+        int rt_frame = frame / 3;
+        int toggle = rt_frame % 2;
         for(int i = 0;i < 24;i++){
             for (int j = 0;j < 80;j++){
-                if (j==25 | j==55){
+                if (j==25 || j==55){
                     if(i % 2 == toggle){
                         updateGrid(i, j, '/');
                     }
                     else{
-                        updateGrid(i, j, '\\');
-                    }
-                    
-                }else{
-                    if (grid[i][j] != 'X'){
                         updateGrid(i, j, ' ');
                     }
                 }
+                else if (j == 40 && 
+                            ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
+                             (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24))){
+                    updateGrid(i, j, '/');
+                }
+                else if (grid[i][j] != 'X'){
+                        updateGrid(i, j, ' ');
+                    }
             }
         }
     }
@@ -94,7 +103,13 @@ public class Game {
         t.moveTo(0, 0);
         for(int i = 0;i < 24;i++){
             for (int j = 0;j < 80;j++){
-                t.setChar(grid[i][j]);
+                if (grid[i][j] == '/'){
+                    t.setBgColor(Color.WHITE);
+                    t.setChar(' ');
+                    t.resetStyle();
+                }else{
+                    t.setChar(grid[i][j]);                    
+                }
             }
         }
     }
