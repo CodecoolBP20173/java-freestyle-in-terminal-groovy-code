@@ -4,12 +4,12 @@ import com.codecool.termlib.Direction;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import javax.lang.model.util.ElementFilter;
 import java.lang.Thread;
-import java.util.Random;
-import java.util.Arrays;
-
 
 import java.io.*;
 import com.codecool.termlib.Color;
@@ -23,6 +23,9 @@ public class Game {
     static Terminal t = new Terminal();
     static char car = 'X';
     static int[][] blocks=new int[50][2];
+    Character[] obstacleSet = {'O', 'G', 'V', 'M'};
+    List<Character> obstacles = Arrays.asList(obstacleSet);
+    Character randomObstacles = obstacles.get(new Random().nextInt(obstacles.size()));
 
     public static class Car{
         static int row = 23;
@@ -39,11 +42,13 @@ public class Game {
             Character input = tryToRead();
             if (input != null){
                 if (input == 'd') {
+                    checkImpact();
                     updateGrid(Car.row, Car.col, ' ');
                     Car.col++;
                     updateGrid(Car.row, Car.col, 'X');
                 }
                 if (input == 'a') {
+                    checkImpact();
                     updateGrid(Car.row, Car.col, ' ');
                     Car.col--;
                     updateGrid(Car.row, Car.col, 'X');
@@ -115,6 +120,22 @@ public class Game {
         }
         for (int i = 0; i < blocks.length; i++) {
             System.out.println(Arrays.toString(blocks[i]));
+        }
+
+    }
+
+    public static void checkImpact() {
+        for (int i = 0; i < grid.length; i++) {
+            if (Car.col == 26) {
+                updateGrid(Car.row, Car.col, ' ');
+                Car.col++;
+
+            }
+            if (Car.col == 54) {
+                updateGrid(Car.row, Car.col, ' ');
+                Car.col--;
+
+            }
         }
     }
 }
