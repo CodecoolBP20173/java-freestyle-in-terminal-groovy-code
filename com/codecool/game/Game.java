@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.lang.model.util.ElementFilter;
 import java.lang.Thread;
+import java.util.Random;
+import java.util.Arrays;
 
 
 import java.io.*;
@@ -20,6 +22,7 @@ public class Game {
     static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static char car = 'X';
+    static int[][] blocks=new int[50][2];
 
     public static class Car{
         static int row = 23;
@@ -29,7 +32,10 @@ public class Game {
     public static void main(String[] args) throws InterruptedException {
         boolean b = false;
         updateGrid(Car.row, Car.col, car);
+        blockElements();
         while (true) {
+            int c=0;
+            updateGrid(blocks[c][0],blocks[c][1],'*');
             Character input = tryToRead();
             if (input != null){
                 if (input == 'd') {
@@ -50,6 +56,7 @@ public class Game {
             b = !b;
             drawGrid();
             Thread.sleep(200);
+            c++;
         }
     }
 
@@ -82,7 +89,7 @@ public class Game {
                     }
                     
                 }else{
-                    if (grid[i][j] != 'X'){
+                    if (grid[i][j] != 'X' ){
                         updateGrid(i, j, ' ');
                     }
                 }
@@ -100,7 +107,15 @@ public class Game {
     }
 
     public static void blockElements(){
-        
+        Random rand = new Random();
+        for (int i = 0; i<50; i++){
+            int n = 25 + (int)(Math.random() * ((55 - 25) + 1));
+            blocks[i][0]=15;
+            blocks[i][1]=n;
+        }
+        for (int i = 0; i < blocks.length; i++) {
+            System.out.println(Arrays.toString(blocks[i]));
+        }
     }
 }
 
