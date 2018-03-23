@@ -1,15 +1,12 @@
 package com.codecool.game;
 
-import com.codecool.termlib.Direction;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+// import java.io.BufferedReader;
+// import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
-
 import javax.lang.model.util.ElementFilter;
 import java.lang.Thread;
 
-
-import java.io.*;
 import com.codecool.termlib.Color;
 import com.codecool.termlib.Direction;
 import com.codecool.termlib.Terminal;
@@ -17,39 +14,42 @@ import com.codecool.termlib.Terminal;
 
 
 public class Game {
-    static char[][] grid = new char[24][80];
+    public static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
-    static char car = 'X';
     static short frame = 1;
+    //static char car = 'X';
+    // static char[][] car2 = {{'@', '@'}, 
+    //                         {'@', '@'}, 
+    //                         {'@', '@'}}; 
     
-    public static class Car{
-        static int row = 23;
-        static int col = 45;
-    }
+    // public static class Car{
+    //     static int row = 23;
+    //     static int col = 45;
+    // }
 
     public static void main(String[] args) throws InterruptedException, IOException {
         boolean b = false;
         
-        updateGrid(Car.row, Car.col, car);
+        Thing car = new Thing("resources/car.txt", 39, 15);
+        
+        System.in.read();
+
         while (true) {
             if (frame == 2400) frame = 1;
+            if (frame % 3 == 0) drawRoad();
+            car.draw();
             Character input = tryToRead();
             if (input != null){
                 if (input == 'd') {
-                    updateGrid(Car.row, Car.col, ' ');
-                    Car.col++;
-                    updateGrid(Car.row, Car.col, 'X');
+                    car.move(Direction.FORWARD);
                 }
                 if (input == 'a') {
-                    updateGrid(Car.row, Car.col, ' ');
-                    Car.col--;
-                    updateGrid(Car.row, Car.col, 'X');
+                    car.move(Direction.BACKWARD);
                 }
                 if (input == 'q') {
                     System.exit(0);
                 }  
             }
-            if (frame % 3 == 0) drawRoad();
             b = !b;
             drawGrid();
             Thread.sleep(10);
@@ -61,7 +61,6 @@ public class Game {
     public static void updateGrid(int row, int col, char ch) {
         grid[row][col] = ch;
     }
-
 
     private static Character tryToRead() {
         try {
@@ -81,35 +80,51 @@ public class Game {
             for (int j = 0;j < 80;j++){
                 if (j==25 || j==55){
                     if(i % 2 == toggle){
-                        updateGrid(i, j, '/');
+                        updateGrid(i, j, 'w'); // 'w' for 'white'
                     }
                     else{
-                        updateGrid(i, j, ' ');
+                        updateGrid(i, j, '\u0000');
+                    }
+                    
+                }
+                else if (j == 40){
+                    if ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
+                        (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24)){
+                    
+                        updateGrid(i, j, 'w'); 
+                    }
+                    else{
+                        updateGrid(i, j, '\u0000');       
                     }
                 }
-                else if (j == 40 && 
-                            ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
-                             (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24))){
-                    updateGrid(i, j, '/');
-                }
-                else if (grid[i][j] != 'X'){
-                        updateGrid(i, j, ' ');
-                    }
             }
         }
     }
-
     public static void drawGrid(){
         t.moveTo(0, 0);
         for(int i = 0;i < 24;i++){
             for (int j = 0;j < 80;j++){
-                if (grid[i][j] == '/'){
+                if (grid[i][j] == 'w'){
                     t.setBgColor(Color.WHITE);
                     t.setChar(' ');
                     t.resetStyle();
-                }else{
-                    t.setChar(grid[i][j]);                    
                 }
+                else if( grid[i][j] == '\u0000'){ //default initialization value for char type
+                    t.setChar(' ');                    
+                }
+                else{
+                    t.setChar(grid[i][j]);
+                }
+            }
+        }
+    }
+
+    //fills the grid with space characters, space (' ') means there is nothing here
+    //the char default initalization value \u0000 could print anything
+    public static void clearGrid(){
+        for(int i = 0; i < 24; i++){
+            for (int j = 0; j < 80; j++){
+                grid[i][j] = '\u0000';
             }
         }
     }
