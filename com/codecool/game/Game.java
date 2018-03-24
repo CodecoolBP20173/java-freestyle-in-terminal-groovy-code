@@ -89,16 +89,6 @@ public class Game {
                     }
                     
                 }
-                // else if (j == 40){
-                //     if ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
-                //         (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24)){
-                    
-                //         updateGrid(i, j, 'w'); 
-                //     }
-                //     else{
-                //         updateGrid(i, j, '\u0000');       
-                //     }
-                // }
             }
         }
     }
