@@ -100,7 +100,6 @@ public class Thing{
     }
     
     //update grid with the thing, "stamp" it on the grid
-    //TODO: we should handle partly out of screen and collision here I think
     public void draw(){
         _draw("draw");
     }

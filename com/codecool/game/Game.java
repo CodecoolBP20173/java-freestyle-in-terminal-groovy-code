@@ -16,30 +16,28 @@ public class Game {
     public static char[][] grid = new char[MAXROW][MAXCOL];
     static Terminal t = new Terminal();
     static short frame = 1;
-    static int speed = 140;
+    static int speed = 20;
     static int[][] blocks=new int[50][2];
     static Thing car, roadSign;
 
     public static class Obstacle {
         static int row = 0;
         static int col = 45;
-        static char symbol = 'O';
+        static char symbol = '#';
     }
     
     public static void main(String[] args) throws InterruptedException, IOException {
-        car = new Thing("resources/car.txt", 39, 15);
+        car = new Thing("resources/car2.txt", 39, 19);
         roadSign = new Thing("resources/road_sign.txt", 39, -24);
         //System.in.read();
         updateGrid(Obstacle.row, Obstacle.col, Obstacle.symbol);
         while (true) {
             if (frame == 2400) frame = 1;
-            if (frame % 3 == 0) drawRoad();
-
-            if (speed > 50) {
-                speed--;
+            if (frame % 3 == 0){
+                drawRoad();
+                moveObstacle();
+                checkImpact();                
             }
-            
-            moveObstacle();
             car.draw();
             
             Character input = tryToRead();
@@ -54,12 +52,12 @@ public class Game {
                 }
                 if (input == 'w') {
                     if (speed > 0) {
-                        speed -= 20;
+                        speed -= 2;
                     }
                 }
                 if (input == 's') {
                     if (speed < 350) {
-                        speed += 20;
+                        speed += 2;
                     }
                 }
                 if (input == 'q') {
@@ -67,6 +65,9 @@ public class Game {
                 }
             }
             drawGrid();
+            if (speed < 0){
+                speed = 0;
+            }
             Thread.sleep(speed);
             frame++;
             //System.in.read();
@@ -98,9 +99,9 @@ public class Game {
             roadSign.moveTo(39, -23);
         }
 
-        for(int i = 0;i < 24;i++){
-            for (int j = 0;j < 80;j++){
-                if (j==25 || j==55){
+        for(int i = 0; i < MAXROW; i++){
+            for (int j = 0; j < MAXCOL; j++){
+                if (j == 24 || j == 55){
                     if(i % 2 == toggle){
                         updateGrid(i, j, 'w'); // 'w' for 'white', drawGrid function will set a white bg block for every 'w'
                     }
@@ -115,10 +116,20 @@ public class Game {
 
     public static void drawGrid(){
         t.moveTo(0, 0);
-        for(int i = 0;i < 24;i++){
-            for (int j = 0;j < 80;j++){
+        for(int i = 0;i < MAXROW;i++){
+            for (int j = 0;j < MAXCOL;j++){
                 if (grid[i][j] == 'w'){
                     t.setBgColor(Color.WHITE);
+                    t.setChar(' ');
+                    t.resetStyle();
+                }
+                else if (grid[i][j] == '#'){
+                    t.setBgColor(Color.RED);
+                    t.setChar(' ');
+                    t.resetStyle();
+                }
+                else if (grid[i][j] == ';'){
+                    t.setBgColor(Color.BLUE);
                     t.setChar(' ');
                     t.resetStyle();
                 }
@@ -132,15 +143,6 @@ public class Game {
         }
     }
 
-    //fills the grid with space characters, space (' ') means there is nothing here
-    public static void clearGrid(){
-        for(int i = 0; i < 24; i++){
-            for (int j = 0; j < 80; j++){
-                grid[i][j] = ' ';
-            }
-        }
-    }
-
     public static void moveObstacle(){
         
         if (Obstacle.row < 23) {
@@ -149,38 +151,48 @@ public class Game {
             updateGrid(Obstacle.row -1, Obstacle.col, ' ');
         }
         if (Obstacle.row == 23) {
-            checkImpact();
             updateGrid(Obstacle.row, Obstacle.col, ' ');
             Obstacle.row = 0;
             Random rnd = new Random();
-            int n = 25 + (int)(Math.random() * ((55-25)+1));
+            int n = 25 + (int)(Math.random() * 29);
             Obstacle.col = n;
         }
     } 
 
+    public static void checkImpact() {
+            if (car.posX == 23) {
+                car.move(Direction.FORWARD);
+                
+            }
+            else if (car.posX + car.sizeX == 57) {
+                car.move(Direction.BACKWARD);
+            }
+            
+            if (car.posX <= Obstacle.col && Obstacle.col < (car.posX + car.sizeX) 
+                && car.posY == Obstacle.row) {
+                System.exit(0);
+            }
+    }
+
+    //not used functions below
 
     public static void blockElements(){
         Random rand = new Random();
-        for (int i = 0; i<50; i++){
+        for (int i = 0; i < 50; i++){
             int n = 25 + (int)(Math.random() * ((55 - 25) + 1));
             blocks[i][0]=15;
             blocks[i][1]=n;
         }
     }
     
-    public static void checkImpact() {
-            if (car.posX == 26) {
-                car.move(Direction.FORWARD);
-                
+
+    //fills the grid with space characters, space (' ') means there is nothing here
+    public static void clearGrid(){
+        for(int i = 0; i < 24; i++){
+            for (int j = 0; j < 80; j++){
+                grid[i][j] = ' ';
             }
-            else if (car.posX == 54) {
-                car.move(Direction.BACKWARD);
-            }
-            
-            if (car.posX <= Obstacle.col <= car.posX + car.sizeX 
-                && car.posY == Obstacle.row) {
-                System.exit(0);
-            }
+        }
     }
     
     public static void timer(){
