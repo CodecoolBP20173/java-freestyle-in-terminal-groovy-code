@@ -28,6 +28,8 @@ public class Thing{
         }
     }
 
+    //this constructor imports from a text file an ascii 'image'
+    //the first line of file should be as long, as the whole pic will be
     Thing(String filePath, int posX, int posY) throws IOException {
 
         this.posX = posX;
@@ -45,13 +47,14 @@ public class Thing{
             while ((c = inputStream.read()) != -1) {
                 if (c == '\n'){
                     importCells.add(line);
-                    System.out.println(line);
-                    line = new ArrayList<Character>(); //clearing is not good, same ref 
+                    //System.out.println(line);
+                    line = new ArrayList<Character>(); //clearing is not good, because 'line' points to the same object 
                 }
                 else{
                     line.add((char) c);
                 }
             }
+            //importCells.add(line);
             
         } finally {
             if (inputStream != null) {
@@ -61,6 +64,9 @@ public class Thing{
 
         sizeX = importCells.get(0).size();
         sizeY = importCells.size();
+
+        System.out.println("sizeX: " + sizeX);
+        System.out.println("sizeY: " + sizeY);
 
         cells = new char[sizeY][sizeX];
         for (int y = 0; y < sizeY; y++) {
@@ -76,7 +82,9 @@ public class Thing{
     public void draw(){
         for (int y = 0; y < sizeY; y++) {
             for(int x = 0; x < sizeX; x++){
-                Game.grid[posY + y][posX + x] = cells[y][x];
+                if (cells[y][x] != ' ') { 
+                    Game.grid[posY + y][posX + x] = cells[y][x];
+                }
             }
         }
     }

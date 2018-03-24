@@ -17,22 +17,13 @@ public class Game {
     public static char[][] grid = new char[24][80];
     static Terminal t = new Terminal();
     static short frame = 1;
-    //static char car = 'X';
-    // static char[][] car2 = {{'@', '@'}, 
-    //                         {'@', '@'}, 
-    //                         {'@', '@'}}; 
-    
-    // public static class Car{
-    //     static int row = 23;
-    //     static int col = 45;
-    // }
 
     public static void main(String[] args) throws InterruptedException, IOException {
         boolean b = false;
         
         Thing car = new Thing("resources/car.txt", 39, 15);
         
-        System.in.read();
+        //System.in.read();
 
         while (true) {
             if (frame == 2400) frame = 1;
