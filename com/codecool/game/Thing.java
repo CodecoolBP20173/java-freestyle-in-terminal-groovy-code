@@ -11,8 +11,8 @@ import com.codecool.termlib.Direction;
 //a rectangle shaped thing represented with a multiarray of chars
 public class Thing{
     char[][] cells; //character cells of the thing 
-    int sizeX, sizeY; // size of thing
-    int posX, posY; //position of top left cell of the thing in the global grid array
+    public int sizeX, sizeY; // size of thing
+    public int posX, posY; //position of top left cell of the thing in the global grid array
 
     //this constructor fills a thing with the data of importPix 
     Thing(char[][] importPix, int posX, int posY){
@@ -76,26 +76,38 @@ public class Thing{
         }
 
     }
-    
-    //TODO: we should handle partly out of screen and collision here I think
-    //update grid with the thing, "stamp" it on the grid
-    public void draw(){
+
+    private void _draw(String option){
+        boolean onScreen, opaque;
+        int gx, gy; //grid coordinates of the actual cell in the loop we operate on
         for (int y = 0; y < sizeY; y++) {
             for(int x = 0; x < sizeX; x++){
-                if (cells[y][x] != ' ') { 
-                    Game.grid[posY + y][posX + x] = cells[y][x];
+                gx = posX + x;
+                gy = posY + y; 
+                onScreen = gy < Game.MAXROW && gy >= 0 && gx < Game.MAXCOL && gx >= 0 ;
+                opaque = cells[y][x] != '~'; //this character signifies transparency
+                if (onScreen && opaque){
+                    if (option.equals("draw")){ 
+                        Game.grid[gy][gx] = cells[y][x];
+                    }
+                    else if (option.equals("clear")){
+                        Game.grid[gy][gx] = '\u0000';
+                    }
+
                 }
             }
         }
     }
+    
+    //update grid with the thing, "stamp" it on the grid
+    //TODO: we should handle partly out of screen and collision here I think
+    public void draw(){
+        _draw("draw");
+    }
 
     //clears the thing's rectangle in the grid, we use this method before moving 
     public void clear(){
-        for (int y = 0; y < sizeY; y++) {
-            for(int x = 0; x < sizeX; x++){
-                Game.grid[posY + y][posX + x] = '\u0000';
-            }
-        }
+        _draw("clear");
     }
 
     public void move(Direction dir){
@@ -112,6 +124,13 @@ public class Thing{
         else if (dir == Direction.DOWN){
             posY++;
         }
+        draw();
+    }
+
+    public void moveTo(int x, int y){
+        clear(); //clear the rectangle where we are now
+        posX = x;
+        posY = y;
         draw();
     }
 }

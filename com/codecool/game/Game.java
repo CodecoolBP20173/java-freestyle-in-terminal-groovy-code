@@ -14,17 +14,16 @@ import com.codecool.termlib.Terminal;
 
 
 public class Game {
-    public static char[][] grid = new char[24][80];
+    public static final int MAXROW = 24, MAXCOL = 80;
+    public static char[][] grid = new char[MAXROW][MAXCOL];
     static Terminal t = new Terminal();
     static short frame = 1;
-
+    static Thing car, roadSign, roadSign2;
+    
     public static void main(String[] args) throws InterruptedException, IOException {
-        boolean b = false;
-        
-        Thing car = new Thing("resources/car.txt", 39, 15);
-        
         //System.in.read();
-
+        car = new Thing("resources/car.txt", 39, 15);
+        roadSign = new Thing("resources/road_sign.txt", 39, -24);
         while (true) {
             if (frame == 2400) frame = 1;
             if (frame % 3 == 0) drawRoad();
@@ -37,11 +36,16 @@ public class Game {
                 if (input == 'a') {
                     car.move(Direction.BACKWARD);
                 }
+                if (input == 'w') {
+                    car.move(Direction.UP);
+                }
+                if (input == 's') {
+                    car.move(Direction.DOWN);
+                }
                 if (input == 'q') {
                     System.exit(0);
                 }  
             }
-            b = !b;
             drawGrid();
             Thread.sleep(10);
             frame++;
@@ -67,6 +71,13 @@ public class Game {
     public static void drawRoad(){
         int rt_frame = frame / 3;
         int toggle = rt_frame % 2;
+
+        if (roadSign.posY < 0) {
+            roadSign.move(Direction.DOWN);    
+        } else {
+            roadSign.moveTo(39, -23);
+        }
+
         for(int i = 0;i < 24;i++){
             for (int j = 0;j < 80;j++){
                 if (j==25 || j==55){
@@ -78,16 +89,16 @@ public class Game {
                     }
                     
                 }
-                else if (j == 40){
-                    if ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
-                        (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24)){
+                // else if (j == 40){
+                //     if ((i >= (rt_frame % 24) && i < ((rt_frame + 4) % 24)) ||
+                //         (i >= (rt_frame + 12) % 24 && i < (rt_frame + 16) % 24)){
                     
-                        updateGrid(i, j, 'w'); 
-                    }
-                    else{
-                        updateGrid(i, j, '\u0000');       
-                    }
-                }
+                //         updateGrid(i, j, 'w'); 
+                //     }
+                //     else{
+                //         updateGrid(i, j, '\u0000');       
+                //     }
+                // }
             }
         }
     }
