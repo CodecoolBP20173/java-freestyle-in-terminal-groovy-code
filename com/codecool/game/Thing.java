@@ -29,7 +29,7 @@ public class Thing{
     }
 
     //this constructor imports from a text file an ascii 'image'
-    //the first line of file should be as long, as the whole pic will be
+    //the first line of file should be as wide, as the whole pic will be
     Thing(String filePath, int posX, int posY) throws IOException {
 
         this.posX = posX;
